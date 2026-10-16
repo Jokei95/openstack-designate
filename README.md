@@ -11,7 +11,7 @@ dns.providers.openstack-designate
 
 ## Authenticating
 
-See [the associated README in the libdns package](https://github.com/libdns/openstack-designate) for important information about credentials.
+See [the associated README in the libdns package](https://github.com/Jokei95/libdns-openstack-designate) for important information about credentials.
 
 ## Building
 
