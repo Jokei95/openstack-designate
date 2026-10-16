@@ -15,7 +15,7 @@ See [the associated README in the libdns package](https://github.com/Jokei95/lib
 
 ## Building
 
-To compile this Caddy module, follow the steps describe at the [Caddy Build from Source](https://github.com/caddyserver/caddy#build-from-source) instructions and import the `github.com/caddy-dns/openstack-designate` plugin
+To compile this Caddy module, follow the steps describe at the [Caddy Build from Source](https://github.com/caddyserver/caddy#build-from-source) instructions and import the `github.com/Jokei95/openstack-designate` plugin
 
 ## Config examples
 

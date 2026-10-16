@@ -1,4 +1,4 @@
-module github.com/caddy-dns/openstack-designate
+module github.com/Jokei95/openstack-designate
 
 go 1.14
 
