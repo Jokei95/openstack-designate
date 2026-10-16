@@ -30,9 +30,9 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 	p.Provider.AuthOpenStack.RegionName = repl.ReplaceAll(p.Provider.AuthOpenStack.RegionName, "")
 	p.Provider.AuthOpenStack.TenantID = repl.ReplaceAll(p.Provider.AuthOpenStack.TenantID, "")
 	p.Provider.AuthOpenStack.IdentityApiVersion = repl.ReplaceAll(p.Provider.AuthOpenStack.IdentityApiVersion, "")
-	p.Provider.AuthOpenStack.Password = repl.ReplaceAll(p.Provider.AuthOpenStack.Password, "")
+	p.Provider.AuthOpenStack.ApplicationCredentialSecret = repl.ReplaceAll(p.Provider.AuthOpenStack.ApplicationCredentialSecret, "")
 	p.Provider.AuthOpenStack.AuthURL = repl.ReplaceAll(p.Provider.AuthOpenStack.AuthURL, "")
-	p.Provider.AuthOpenStack.Username = repl.ReplaceAll(p.Provider.AuthOpenStack.Username, "")
+	p.Provider.AuthOpenStack.ApplicationCredentialId = repl.ReplaceAll(p.Provider.AuthOpenStack.ApplicationCredentialId, "")
 	p.Provider.AuthOpenStack.TenantName = repl.ReplaceAll(p.Provider.AuthOpenStack.TenantName, "")
 	p.Provider.AuthOpenStack.EndpointType = repl.ReplaceAll(p.Provider.AuthOpenStack.EndpointType, "")
 
@@ -45,8 +45,8 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 //     region_name <string>
 //     tenant_id <string>
 //     identity_api_version <string>
-//     password <string>
-//     username <string>
+//     application_credential_secret <string>
+//     application_credential_id <string>
 //     tenant_name <string>
 //     endpoint_type <string>
 //     auth_url <string>
@@ -80,16 +80,16 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				if d.NextArg() {
 					return d.ArgErr()
 				}
-			case "password":
+			case "application_credential_secret":
 				if d.NextArg() {
-					p.Provider.AuthOpenStack.Password = d.Val()
+					p.Provider.AuthOpenStack.ApplicationCredentialSecret = d.Val()
 				}
 				if d.NextArg() {
 					return d.ArgErr()
 				}
-			case "username":
+			case "application_credential_id":
 				if d.NextArg() {
-					p.Provider.AuthOpenStack.Username = d.Val()
+					p.Provider.AuthOpenStack.ApplicationCredentialId = d.Val()
 				}
 				if d.NextArg() {
 					return d.ArgErr()

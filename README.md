@@ -31,8 +31,8 @@ To use this module for the ACME DNS challenge, [configure the ACME issuer in you
         "region_name": "{env.OS_REGION_NAME}",
         "tenant_id": "{env.OS_TENANT_ID}",
         "identity_api_version": "{env.OS_IDENTITY_API_VERSION}",
-        "password": "{env.OS_PASSWORD}",
-        "username": "{env.OS_USERNAME}",
+        "application_credential_secret": "{env.OS_APPLICATION_CREDENTIAL_SECRET}",
+        "application_credential_id": "{env.OS_APPLICATION_CREDENTIAL_ID}",
         "tenant_name": "{env.OS_TENANT_NAME}",
         "auth_url": "{env.OS_AUTH_URL}",
         "endpoint_type": "{env.OS_ENDPOINT_TYPE}"
@@ -50,8 +50,8 @@ tls {
     region_name {$OS_REGION_NAME}
     tenant_id {$OS_TENANT_ID}
     identity_api_version {$OS_IDENTITY_API_VERSION}
-    password {$OS_PASSWORD}
-    username {$OS_USERNAME}
+    application_credential_secret {$OS_APPLICATION_CREDENTIAL_SECRET}
+    application_credential_id {$OS_APPLICATION_CREDENTIAL_ID}
     tenant_name {$OS_TENANT_NAME}
     auth_url {$OS_AUTH_URL}
     endpoint_type {$OS_ENDPOINT_TYPE}
