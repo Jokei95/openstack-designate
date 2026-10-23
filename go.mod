@@ -4,5 +4,5 @@ go 1.14
 
 require (
 	github.com/caddyserver/caddy/v2 v2.3.0
-	github.com/Jokei95/libdns-openstack-designate v0.0.0-20261023141017-93226f49f7caeb98a9458b7d83dd754178001b32
+	github.com/Jokei95/libdns-openstack-designate v0.0.0-20261023142627-1ff7ae2faaf96d93462e140e34b085a7fac245c0
 )
