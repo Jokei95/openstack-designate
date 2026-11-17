@@ -31,7 +31,7 @@ func (p *Provider) Provision(_ caddy.Context) error {
 	a.IdentityApiVersion = repl.ReplaceAll(a.IdentityApiVersion, "")
 	a.ApplicationCredentialSecret = repl.ReplaceAll(a.ApplicationCredentialSecret, "")
 	a.AuthURL = repl.ReplaceAll(a.AuthURL, "")
-	a.ApplicationCredentialId = repl.ReplaceAll(a.ApplicationCredentialId, "")
+	a.ApplicationCredentialID = repl.ReplaceAll(a.ApplicationCredentialID, "")
 	a.TenantName = repl.ReplaceAll(a.TenantName, "")
 	a.EndpointType = repl.ReplaceAll(a.EndpointType, "")
 	return nil
@@ -73,7 +73,7 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			case "auth_url":
 				dst = &a.AuthURL
 			case "application_credential_id":
-				dst = &a.ApplicationCredentialId
+				dst = &a.ApplicationCredentialID
 			case "tenant_name":
 				dst = &a.TenantName
 			case "endpoint_type":
