@@ -29,9 +29,9 @@ func (p *Provider) Provision(_ caddy.Context) error {
 	a.RegionName = repl.ReplaceAll(a.RegionName, "")
 	a.TenantID = repl.ReplaceAll(a.TenantID, "")
 	a.IdentityApiVersion = repl.ReplaceAll(a.IdentityApiVersion, "")
-	a.Password = repl.ReplaceAll(a.Password, "")
+	a.ApplicationCredentialSecret = repl.ReplaceAll(a.ApplicationCredentialSecret, "")
 	a.AuthURL = repl.ReplaceAll(a.AuthURL, "")
-	a.Username = repl.ReplaceAll(a.Username, "")
+	a.ApplicationCredentialId = repl.ReplaceAll(a.ApplicationCredentialId, "")
 	a.TenantName = repl.ReplaceAll(a.TenantName, "")
 	a.EndpointType = repl.ReplaceAll(a.EndpointType, "")
 	return nil
@@ -43,9 +43,9 @@ func (p *Provider) Provision(_ caddy.Context) error {
 //	    region_name REGION
 //	    tenant_id TENANT_ID
 //	    identity_api_version VERSION
-//	    password PASSWORD
+//      application_credential_secret <string>
 //	    auth_url AUTH_URL
-//	    username USERNAME
+//	    application_credential_id <string>
 //	    tenant_name TENANT_NAME
 //	    endpoint_type ENDPOINT_TYPE
 //	}
@@ -68,12 +68,12 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				dst = &a.TenantID
 			case "identity_api_version":
 				dst = &a.IdentityApiVersion
-			case "password":
-				dst = &a.Password
+			case "application_credential_secret":
+				dst = &a.ApplicationCredentialSecret
 			case "auth_url":
 				dst = &a.AuthURL
-			case "username":
-				dst = &a.Username
+			case "application_credential_id":
+				dst = &a.ApplicationCredentialId
 			case "tenant_name":
 				dst = &a.TenantName
 			case "endpoint_type":
