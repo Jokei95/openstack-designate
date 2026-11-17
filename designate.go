@@ -7,124 +7,92 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 )
 
-// Provider wraps the provider implementation as a Caddy module.
+// Provider wraps the libdns OpenStack Designate provider as a Caddy DNS module.
 type Provider struct{ *designate.Provider }
 
-func init() {
-	caddy.RegisterModule(Provider{})
-}
+func init() { caddy.RegisterModule(Provider{}) }
 
-// CaddyModule returns the Caddy module information.
 func (Provider) CaddyModule() caddy.ModuleInfo {
 	return caddy.ModuleInfo{
-		ID: "dns.providers.openstack-designate",
-		New: func() caddy.Module {
-			return &Provider{new(designate.Provider)}
-		},
+		ID:  "dns.providers.openstack-designate",
+		New: func() caddy.Module { return &Provider{Provider: new(designate.Provider)} },
 	}
 }
 
-// Provision implements the Provisioner interface to initialize the OpenStack Designate client
-func (p *Provider) Provision(ctx caddy.Context) error {
+// Provision expands environment variables in the provider credentials.
+func (p *Provider) Provision(_ caddy.Context) error {
+	if p.Provider == nil {
+		p.Provider = new(designate.Provider)
+	}
 	repl := caddy.NewReplacer()
-	p.Provider.AuthOpenStack.RegionName = repl.ReplaceAll(p.Provider.AuthOpenStack.RegionName, "")
-	p.Provider.AuthOpenStack.TenantID = repl.ReplaceAll(p.Provider.AuthOpenStack.TenantID, "")
-	p.Provider.AuthOpenStack.IdentityApiVersion = repl.ReplaceAll(p.Provider.AuthOpenStack.IdentityApiVersion, "")
-	p.Provider.AuthOpenStack.ApplicationCredentialSecret = repl.ReplaceAll(p.Provider.AuthOpenStack.ApplicationCredentialSecret, "")
-	p.Provider.AuthOpenStack.AuthURL = repl.ReplaceAll(p.Provider.AuthOpenStack.AuthURL, "")
-	p.Provider.AuthOpenStack.ApplicationCredentialId = repl.ReplaceAll(p.Provider.AuthOpenStack.ApplicationCredentialId, "")
-	p.Provider.AuthOpenStack.TenantName = repl.ReplaceAll(p.Provider.AuthOpenStack.TenantName, "")
-	p.Provider.AuthOpenStack.EndpointType = repl.ReplaceAll(p.Provider.AuthOpenStack.EndpointType, "")
-
+	a := &p.Provider.AuthOpenStack
+	a.RegionName = repl.ReplaceAll(a.RegionName, "")
+	a.TenantID = repl.ReplaceAll(a.TenantID, "")
+	a.IdentityApiVersion = repl.ReplaceAll(a.IdentityApiVersion, "")
+	a.Password = repl.ReplaceAll(a.Password, "")
+	a.AuthURL = repl.ReplaceAll(a.AuthURL, "")
+	a.Username = repl.ReplaceAll(a.Username, "")
+	a.TenantName = repl.ReplaceAll(a.TenantName, "")
+	a.EndpointType = repl.ReplaceAll(a.EndpointType, "")
 	return nil
 }
 
-// UnmarshalCaddyfile sets up the DNS provider from Caddyfile tokens. Syntax:
+// UnmarshalCaddyfile accepts the legacy provider Caddyfile syntax:
 //
-// openstack-designate {
-//     region_name <string>
-//     tenant_id <string>
-//     identity_api_version <string>
-//     application_credential_secret <string>
-//     application_credential_id <string>
-//     tenant_name <string>
-//     endpoint_type <string>
-//     auth_url <string>
-// }
-//
+//	openstack-designate {
+//	    region_name REGION
+//	    tenant_id TENANT_ID
+//	    identity_api_version VERSION
+//	    password PASSWORD
+//	    auth_url AUTH_URL
+//	    username USERNAME
+//	    tenant_name TENANT_NAME
+//	    endpoint_type ENDPOINT_TYPE
+//	}
 func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+	if p.Provider == nil {
+		p.Provider = new(designate.Provider)
+	}
+	a := &p.Provider.AuthOpenStack
+
 	for d.Next() {
 		if d.NextArg() {
 			return d.ArgErr()
 		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
+			var dst *string
 			switch d.Val() {
 			case "region_name":
-				if d.NextArg() {
-					p.Provider.AuthOpenStack.RegionName = d.Val()
-				}
-				if d.NextArg() {
-					return d.ArgErr()
-				}
+				dst = &a.RegionName
 			case "tenant_id":
-				if d.NextArg() {
-					p.Provider.AuthOpenStack.TenantID = d.Val()
-				}
-				if d.NextArg() {
-					return d.ArgErr()
-				}
+				dst = &a.TenantID
 			case "identity_api_version":
-				if d.NextArg() {
-					p.Provider.AuthOpenStack.IdentityApiVersion = d.Val()
-				}
-				if d.NextArg() {
-					return d.ArgErr()
-				}
-			case "application_credential_secret":
-				if d.NextArg() {
-					p.Provider.AuthOpenStack.ApplicationCredentialSecret = d.Val()
-				}
-				if d.NextArg() {
-					return d.ArgErr()
-				}
-			case "application_credential_id":
-				if d.NextArg() {
-					p.Provider.AuthOpenStack.ApplicationCredentialId = d.Val()
-				}
-				if d.NextArg() {
-					return d.ArgErr()
-				}
-			case "tenant_name":
-				if d.NextArg() {
-					p.Provider.AuthOpenStack.TenantName = d.Val()
-				}
-				if d.NextArg() {
-					return d.ArgErr()
-				}
-			case "endpoint_type":
-				if d.NextArg() {
-					p.Provider.AuthOpenStack.EndpointType = d.Val()
-				}
-				if d.NextArg() {
-					return d.ArgErr()
-				}
+				dst = &a.IdentityApiVersion
+			case "password":
+				dst = &a.Password
 			case "auth_url":
-				if d.NextArg() {
-					p.Provider.AuthOpenStack.AuthURL = d.Val()
-				}
-				if d.NextArg() {
-					return d.ArgErr()
-				}
+				dst = &a.AuthURL
+			case "username":
+				dst = &a.Username
+			case "tenant_name":
+				dst = &a.TenantName
+			case "endpoint_type":
+				dst = &a.EndpointType
 			default:
-				return d.Errf("unrecognized subdirective '%s'", d.Val())
+				return d.Errf("unrecognized subdirective %q", d.Val())
+			}
+			if !d.NextArg() {
+				return d.ArgErr()
+			}
+			*dst = d.Val()
+			if d.NextArg() {
+				return d.ArgErr()
 			}
 		}
 	}
-
 	return nil
 }
 
-// Interface guards
 var (
 	_ caddyfile.Unmarshaler = (*Provider)(nil)
 	_ caddy.Provisioner     = (*Provider)(nil)
